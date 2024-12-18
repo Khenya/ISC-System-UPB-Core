@@ -1,0 +1,8 @@
+ docker run --rm --network sonarqube-network \
+  -v $(pwd):/usr/src \
+  -w /usr/src \
+  sonarsource/sonar-scanner-cli \
+  -Dsonar.projectKey=isc-system-core \
+  -Dsonar.sources=src \
+  -Dsonar.host.url=http://sonarqube:9000 \
+  -Dsonar.login=squ_250a4f86dc39c7612263b0a0ed16d86cc683a5d5
