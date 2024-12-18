@@ -33,15 +33,13 @@ resource "aws_security_group" "isc_system_core_sg" {
   }
 }
 
-# Llave SSH para acceder al EC2
 resource "aws_key_pair" "backend-ssh" {
   key_name   = "isc-system-backend-ssh"
   public_key = var.ssh_public_key
 }
 
-# Instancia EC2 para el backend
 resource "aws_instance" "isc_system_core_server" {
-  ami           = "ami-0e2c8caa4b6378d8c"
+  ami           = "ami-0e2c8caa4b6378d8c" # Amazon Linux 2 AMI ID
   instance_type = "t2.micro"
   key_name      = aws_key_pair.backend-ssh.key_name
   vpc_security_group_ids = [aws_security_group.isc_system_core_sg.id]
@@ -50,12 +48,13 @@ resource "aws_instance" "isc_system_core_server" {
     Name = "Backend--ISC-UPB-System-App"
   }
 
+  # Provisión para clonar el repositorio y levantar el backend
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
       host        = self.public_ip
       user        = "ec2-user"
-      private_key = file("isc-system-backend-ssh") }
+      private_key = file("isc-system-backend-ssh")
     }
 
     inline = [
@@ -66,17 +65,16 @@ resource "aws_instance" "isc_system_core_server" {
       "cd /home/ec2-user",
       "git clone https://github.com/Khenya/ISC-System-UPB-Core.git backend", 
       "cd /home/ec2-user/backend",
-      "npm install", 
+      "npm install", # Instalar dependencias del proyecto
       "echo '#!/bin/bash' > /home/ec2-user/backend/start.sh",
       "echo 'cd /home/ec2-user/backend' >> /home/ec2-user/backend/start.sh",
-      "echo 'nohup node server.js > nohup.out 2>&1 &' >> /home/ec2-user/backend/start.sh", 
+      "echo 'nohup node server.js > nohup.out 2>&1 &' >> /home/ec2-user/backend/start.sh",
       "chmod +x /home/ec2-user/backend/start.sh",
-      "bash /home/ec2-user/backend/start.sh" 
+      "bash /home/ec2-user/backend/start.sh" # Levantar la aplicación
     ]
   }
 }
 
-# Elastic IP para la instancia EC2
 resource "aws_eip" "backend_eip" {
   instance = aws_instance.isc_system_core_server.id
 
