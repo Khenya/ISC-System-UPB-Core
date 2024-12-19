@@ -25,3 +25,10 @@ yarn-error.log*
 # Ignore .DS_Store files (macOS)
 .DS_Store
 .vercel
+
+# terraform
+.terraform
+.terraform.*
+terraform.tfstate*
+
+yarn.lock
