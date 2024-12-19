@@ -13,9 +13,9 @@ const knexConfig: { [key: string]: import('knex').Knex.Config } = {
       port: Number(database.port as string) || 5432,
       ssl: false,
     },
-    migrations: {
-      directory: './data/migrations',
-    },
+    // migrations: {
+    //   directory: './data/migrations',
+    // },
     seeds: {
       directory: './data/seeds',
     },
@@ -35,9 +35,9 @@ const knexConfig: { [key: string]: import('knex').Knex.Config } = {
       min: 2,
       max: 10,
     },
-    migrations: {
-      tableName: 'knex_migrations',
-    },
+    // migrations: {
+    //   tableName: 'knex_migrations',
+    // },
   },
   production: {
     client: 'postgresql',
@@ -47,16 +47,16 @@ const knexConfig: { [key: string]: import('knex').Knex.Config } = {
       user: database.user,
       password: database.password,
       ssl: {
-        rejectUnauthorized: true,
+        rejectUnauthorized: false,
       },
     },
     pool: {
       min: 2,
       max: 10,
     },
-    migrations: {
-      tableName: 'knex_migrations',
-    },
+    // migrations: {
+    //   tableName: 'knex_migrations',
+    // },
   },
 };
 
